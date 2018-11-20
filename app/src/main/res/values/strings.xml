@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">EXLskills</string>
+    <string name="home_tab_name">Home</string>
+    <string name="courses_tab_name">Courses</string>
+    <string name="projects_tab_name">Projects</string>
 </resources>
