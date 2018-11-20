@@ -6,7 +6,7 @@ import android.support.constraint.Group
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.exlskills.android.com.exlskills.android.remote.Course
+import com.exlskills.android.com.exlskills.android.remote.CourseLiteMeta
 import com.exlskills.android.com.exlskills.android.remote.Graph
 import com.exlskills.android.com.exlskills.android.remote.GraphCallback
 
@@ -26,11 +26,11 @@ class MainActivity : AppCompatActivity() {
         this.courseListGroup = findViewById(R.id.courseListGroup)
         val self = this
 
-        gqlApi.getAllCourses("relevant", object: GraphCallback<List<Course>> {
+        gqlApi.getAllCourses("relevant", object: GraphCallback<List<CourseLiteMeta>> {
             override fun onFailure(msg: String, code: Int) {
                 println("onfailure")
             }
-            override fun onSuccess(respData: List<Course>) {
+            override fun onSuccess(respData: List<CourseLiteMeta>) {
                 println("onsuccess")
                 println(respData)
                 self.runOnUiThread(object: Runnable {
