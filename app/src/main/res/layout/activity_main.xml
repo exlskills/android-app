@@ -13,36 +13,42 @@
 
         <!-- This coordinator Layout matches the parent's height, I want to height to match till the BottomNaviagtionView and not below it -->
         <ProgressBar
-                android:id="@+id/foobarprogview"
+                android:id="@+id/mainProgressBar"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <android.support.constraint.Group android:id="@+id/courseListGroup" android:visibility="invisible"
-                                          android:layout_width="match_parent" android:layout_height="match_parent"
-                                          app:constraint_referenced_ids="foobartextview"/>
+        <LinearLayout android:id="@+id/homeLayout" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/homeRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:paddingBottom="56dp"/>
+        </LinearLayout>
 
-        <TextView
-                android:id="@+id/foobartextview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello World!"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <LinearLayout android:id="@+id/coursesLayout" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/coursesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:paddingBottom="56dp"/>
+        </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:paddingBottom="56dp"/>
+        <LinearLayout android:id="@+id/projectsLayout" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/projectsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:paddingBottom="56dp"/>
+        </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+        android:id="@+id/mainBottomNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
