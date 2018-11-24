@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 UIConstants.BOTTOM_NAV_PROJECTS -> {
                     if (currentTab == UIConstants.BOTTOM_NAV_PROJECTS) {
-                        println("Already on home tab, no-op")
+                        println("Already on projects tab, no-op")
                     } else {
                         currentTab = UIConstants.BOTTOM_NAV_PROJECTS
                         loadProjects()
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 UIConstants.BOTTOM_NAV_COURSES -> {
                     if (currentTab == UIConstants.BOTTOM_NAV_COURSES) {
-                        println("Already on home tab, no-op")
+                        println("Already on courses tab, no-op")
                     } else {
                         currentTab = UIConstants.BOTTOM_NAV_COURSES
                         loadCourses()
