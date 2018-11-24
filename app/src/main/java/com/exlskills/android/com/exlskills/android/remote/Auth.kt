@@ -9,7 +9,7 @@ class Auth {
     private val client = OkHttpClient()
 
     fun authenticate() {
-        run("https://api.github.com/users/Evin1-/repos")
+        run(authBaseUrl)
     }
 
     fun run(url: String) {

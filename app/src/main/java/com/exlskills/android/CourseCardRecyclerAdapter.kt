@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.exlskills.android.com.exlskills.android.remote.CourseLiteMeta
 
-class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>) :
+class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val onClickCallback: (courseId: String) -> Unit) :
     RecyclerView.Adapter<CourseCardRecyclerAdapter.CourseViewHolder>() {
 
     private val images = intArrayOf(R.drawable.gophergif,
@@ -18,7 +19,7 @@ class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>) :
         R.drawable.gophergif)
 
     inner class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        var courseId: String = ""
         var itemImage: ImageView
         var itemTitle: TextView
         var itemDetail: TextView
@@ -27,6 +28,12 @@ class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>) :
             itemImage = itemView.findViewById(R.id.item_image)
             itemTitle = itemView.findViewById(R.id.item_title)
             itemDetail = itemView.findViewById(R.id.item_detail)
+        }
+
+        fun setOnClickListener(l: View.OnClickListener) {
+            this.itemImage.setOnClickListener(l)
+            this.itemTitle.setOnClickListener(l)
+            this.itemDetail.setOnClickListener(l)
         }
     }
 
@@ -40,6 +47,12 @@ class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>) :
         viewHolder.itemTitle.text = courses[i].title
         viewHolder.itemDetail.text = courses[i].headline
         viewHolder.itemImage.setImageResource(images[0])
+        viewHolder.courseId = courses[i].id
+        viewHolder.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(p0: View?) {
+                return onClickCallback(viewHolder.courseId)
+            }
+        })
     }
 
     override fun getItemCount(): Int {

@@ -1,5 +1,6 @@
 package com.exlskills.android
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -79,7 +80,11 @@ class MainActivity : AppCompatActivity() {
                 println(respData)
                 self.runOnUiThread(object: Runnable {
                     override fun run() {
-                        homeAdapter = CourseCardRecyclerAdapter(respData)
+                        homeAdapter = CourseCardRecyclerAdapter(respData) { courseId ->
+                            val intent = Intent(self, CourseActivity::class.java)
+                            intent.putExtra("courseId", courseId)
+                            startActivity(intent)
+                        }
                         homeRecyclerView.adapter = homeAdapter
                         mainProgressBar.visibility = View.INVISIBLE
                         homeLayout.visibility = View.VISIBLE
@@ -102,7 +107,11 @@ class MainActivity : AppCompatActivity() {
                 println(respData)
                 self.runOnUiThread(object: Runnable {
                     override fun run() {
-                        coursesAdapter = CourseCardRecyclerAdapter(respData)
+                        coursesAdapter = CourseCardRecyclerAdapter(respData) { courseId ->
+                            val intent = Intent(self, CourseActivity::class.java)
+                            intent.putExtra("courseId", courseId)
+                            startActivity(intent)
+                        }
                         coursesRecyclerView.adapter = coursesAdapter
                         mainProgressBar.visibility = View.INVISIBLE
                         coursesLayout.visibility = View.VISIBLE
