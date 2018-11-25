@@ -5,11 +5,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.view.View
-import com.exlskills.android.com.exlskills.android.remote.CourseLiteMeta
-import com.exlskills.android.com.exlskills.android.remote.DigitalDiploma
-import com.exlskills.android.com.exlskills.android.remote.Graph
-import com.exlskills.android.com.exlskills.android.remote.GraphCallback
+import com.exlskills.android.remote.CourseLiteMeta
+import com.exlskills.android.remote.DigitalDiploma
+import com.exlskills.android.remote.Graph
+import com.exlskills.android.remote.GraphCallback
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +23,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(findViewById<View>(R.id.main_toolbar) as Toolbar)
+        supportActionBar!!.title = "EXLskills"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         homeRecyclerView.layoutManager = LinearLayoutManager(this)
         coursesRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -134,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                 println(respData)
                 self.runOnUiThread(object: Runnable {
                     override fun run() {
-                        projectsAdapter = ProjectCardRecyclerAdapter(respData)
+                        projectsAdapter = ProjectCardRecyclerAdapter(respData.filter { p -> p.is_project })
                         projectsRecyclerView.adapter = projectsAdapter
                         mainProgressBar.visibility = View.INVISIBLE
                         projectsLayout.visibility = View.VISIBLE

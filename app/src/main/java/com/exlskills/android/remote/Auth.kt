@@ -1,4 +1,4 @@
-package com.exlskills.android.com.exlskills.android.remote
+package com.exlskills.android.remote
 
 import okhttp3.*
 import java.io.IOException

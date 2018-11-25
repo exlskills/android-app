@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
-import com.exlskills.android.com.exlskills.android.remote.CourseLiteMeta
+import com.exlskills.android.remote.CourseLiteMeta
 
 class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val onClickCallback: (courseId: String) -> Unit) :
     RecyclerView.Adapter<CourseCardRecyclerAdapter.CourseViewHolder>() {

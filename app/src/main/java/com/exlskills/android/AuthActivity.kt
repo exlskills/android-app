@@ -2,7 +2,7 @@ package com.exlskills.android
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.exlskills.android.com.exlskills.android.remote.Graph
+import com.exlskills.android.remote.Graph
 
 class AuthActivity : AppCompatActivity() {
     private val gqlApi = Graph()

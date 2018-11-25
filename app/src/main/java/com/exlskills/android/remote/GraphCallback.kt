@@ -1,6 +1,4 @@
-package com.exlskills.android.com.exlskills.android.remote
-
-import org.json.JSONObject
+package com.exlskills.android.remote
 
 interface GraphCallback<T> {
     fun onFailure(msg: String, code: Int)

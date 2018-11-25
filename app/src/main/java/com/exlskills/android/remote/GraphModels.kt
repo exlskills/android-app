@@ -1,4 +1,4 @@
-package com.exlskills.android.com.exlskills.android.remote
+package com.exlskills.android.remote
 
 import com.google.gson.JsonElement
 

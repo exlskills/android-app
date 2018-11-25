@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.exlskills.android.com.exlskills.android.remote.DigitalDiploma
+import com.exlskills.android.remote.DigitalDiploma
 
 class ProjectCardRecyclerAdapter(private val courses: List<DigitalDiploma>) :
     RecyclerView.Adapter<ProjectCardRecyclerAdapter.ProjectViewHolder>() {

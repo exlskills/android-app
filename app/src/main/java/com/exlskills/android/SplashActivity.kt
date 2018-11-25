@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.exlskills.android.com.exlskills.android.remote.Graph
+import com.exlskills.android.remote.Graph
 
 class SplashActivity : AppCompatActivity() {
     private val gqlApi = Graph()

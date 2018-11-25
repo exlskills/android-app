@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".MainActivity">
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
+
     <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:paddingTop="?attr/actionBarSize">
 
         <!-- This coordinator Layout matches the parent's height, I want to height to match till the BottomNaviagtionView and not below it -->
         <ProgressBar
@@ -42,13 +52,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    android:paddingBottom="56dp"/>
+                    android:paddingBottom="?attr/actionBarSize"/>
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/mainBottomNav"
+            android:id="@+id/mainBottomNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -57,4 +67,4 @@
             app:itemTextColor="@color/colorWhite"
             app:menu="@menu/main_activity_menu" />
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>
