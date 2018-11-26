@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.exlskills.android.remote.CourseLiteMeta
 
-class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val onClickCallback: (courseId: String) -> Unit) :
+class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val onClickCallback: (course: CourseLiteMeta) -> Unit) :
     RecyclerView.Adapter<CourseCardRecyclerAdapter.CourseViewHolder>() {
 
     private val images = intArrayOf(R.drawable.gophergif,
@@ -49,7 +49,7 @@ class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val o
         viewHolder.courseId = courses[i].id
         viewHolder.setOnClickListener(object: View.OnClickListener {
             override fun onClick(p0: View?) {
-                return onClickCallback(viewHolder.courseId)
+                return onClickCallback(courses[i])
             }
         })
     }

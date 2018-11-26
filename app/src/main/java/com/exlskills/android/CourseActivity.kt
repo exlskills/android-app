@@ -38,8 +38,8 @@ class CourseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course)
 
-        courseId = intent.getStringExtra("courseId")
-        val courseTitle = intent.getStringExtra("courseTitle")
+        courseId = intent.getStringExtra(UIConstants.COURSE_INTENT_KEY_COURSE_ID)
+        val courseTitle = intent.getStringExtra(UIConstants.COURSE_INTENT_KEY_COURSE_TITLE)
 
         setSupportActionBar(findViewById<View>(R.id.htab_toolbar) as Toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)

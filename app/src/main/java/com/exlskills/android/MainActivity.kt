@@ -85,9 +85,10 @@ class MainActivity : AppCompatActivity() {
                 println(respData)
                 self.runOnUiThread(object: Runnable {
                     override fun run() {
-                        homeAdapter = CourseCardRecyclerAdapter(respData) { courseId ->
+                        homeAdapter = CourseCardRecyclerAdapter(respData) { course ->
                             val intent = Intent(self, CourseActivity::class.java)
-                            intent.putExtra("courseId", courseId)
+                            intent.putExtra(UIConstants.COURSE_INTENT_KEY_COURSE_ID, course.id)
+                            intent.putExtra(UIConstants.COURSE_INTENT_KEY_COURSE_TITLE, course.title)
                             startActivity(intent)
                         }
                         homeRecyclerView.adapter = homeAdapter
@@ -112,9 +113,10 @@ class MainActivity : AppCompatActivity() {
                 println(respData)
                 self.runOnUiThread(object: Runnable {
                     override fun run() {
-                        coursesAdapter = CourseCardRecyclerAdapter(respData) { courseId ->
+                        coursesAdapter = CourseCardRecyclerAdapter(respData) { course ->
                             val intent = Intent(self, CourseActivity::class.java)
-                            intent.putExtra("courseId", courseId)
+                            intent.putExtra(UIConstants.COURSE_INTENT_KEY_COURSE_ID, course.id)
+                            intent.putExtra(UIConstants.COURSE_INTENT_KEY_COURSE_TITLE, course.title)
                             startActivity(intent)
                         }
                         coursesRecyclerView.adapter = coursesAdapter
