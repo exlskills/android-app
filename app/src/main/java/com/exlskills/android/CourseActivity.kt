@@ -194,7 +194,9 @@ class CourseActivity : AppCompatActivity() {
                 sectionsRecycler.layoutManager = linearLayoutManager
                 sectionsRecycler.setHasFixedSize(true)
 
-                val adapter = UnitSectionsAdapter(context, unit.sections_list)
+                val adapter = UnitSectionsAdapter(context, unit.sections_list) { section ->
+                    println("Section clicked: " + section.toString())
+                }
                 sectionsRecycler.adapter = adapter
 
                 linLayout.addView(sectionsRecycler)

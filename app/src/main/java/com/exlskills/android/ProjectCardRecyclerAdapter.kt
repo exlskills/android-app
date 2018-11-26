@@ -7,15 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.exlskills.android.remote.DigitalDiploma
+import com.squareup.picasso.Picasso
 
-class ProjectCardRecyclerAdapter(private val courses: List<DigitalDiploma>) :
+class ProjectCardRecyclerAdapter(private val projects: List<DigitalDiploma>) :
     RecyclerView.Adapter<ProjectCardRecyclerAdapter.ProjectViewHolder>() {
-
-    private val images = intArrayOf(R.drawable.gophergif,
-        R.drawable.gophergif, R.drawable.gophergif,
-        R.drawable.gophergif, R.drawable.gophergif,
-        R.drawable.gophergif, R.drawable.gophergif,
-        R.drawable.gophergif)
 
     inner class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -37,13 +32,13 @@ class ProjectCardRecyclerAdapter(private val courses: List<DigitalDiploma>) :
     }
 
     override fun onBindViewHolder(viewHolder: ProjectViewHolder, i: Int) {
-        viewHolder.itemTitle.text = courses[i].title
-        viewHolder.itemDetail.text = courses[i].headline
-        viewHolder.itemImage.setImageResource(images[0])
+        viewHolder.itemTitle.text = projects[i].title
+        viewHolder.itemDetail.text = projects[i].headline
+        Picasso.get().load(projects[i].logo_url).into(viewHolder.itemImage)
     }
 
     override fun getItemCount(): Int {
-        return courses.size
+        return projects.size
     }
 
 }

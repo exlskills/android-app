@@ -7,15 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.exlskills.android.remote.CourseLiteMeta
+import com.squareup.picasso.Picasso
 
 class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val onClickCallback: (course: CourseLiteMeta) -> Unit) :
     RecyclerView.Adapter<CourseCardRecyclerAdapter.CourseViewHolder>() {
-
-    private val images = intArrayOf(R.drawable.gophergif,
-        R.drawable.gophergif, R.drawable.gophergif,
-        R.drawable.gophergif, R.drawable.gophergif,
-        R.drawable.gophergif, R.drawable.gophergif,
-        R.drawable.gophergif)
 
     inner class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var courseId: String = ""
@@ -30,9 +25,7 @@ class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val o
         }
 
         fun setOnClickListener(l: View.OnClickListener) {
-            this.itemImage.setOnClickListener(l)
-            this.itemTitle.setOnClickListener(l)
-            this.itemDetail.setOnClickListener(l)
+            itemView.setOnClickListener(l)
         }
     }
 
@@ -45,7 +38,7 @@ class CourseCardRecyclerAdapter(private val courses: List<CourseLiteMeta>, val o
     override fun onBindViewHolder(viewHolder: CourseViewHolder, i: Int) {
         viewHolder.itemTitle.text = courses[i].title
         viewHolder.itemDetail.text = courses[i].headline
-        viewHolder.itemImage.setImageResource(images[0])
+        Picasso.get().load(courses[i].logo_url).into(viewHolder.itemImage)
         viewHolder.courseId = courses[i].id
         viewHolder.setOnClickListener(object: View.OnClickListener {
             override fun onClick(p0: View?) {

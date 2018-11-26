@@ -14,7 +14,7 @@ import kotlin.math.roundToInt
  * Created by Suleiman on 02/03/17.
  */
 
-class UnitSectionsAdapter(private val context: Context, private val sections: List<UnitSection>) : RecyclerView.Adapter<UnitSectionsAdapter.UnitSectionVh>() {
+class UnitSectionsAdapter(private val context: Context, private val sections: List<UnitSection>, val onClickCallback: (section: UnitSection) -> Unit) : RecyclerView.Adapter<UnitSectionsAdapter.UnitSectionVh>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnitSectionVh {
         val inflater = LayoutInflater.from(parent.context)
@@ -32,6 +32,11 @@ class UnitSectionsAdapter(private val context: Context, private val sections: Li
             100 -> holder.mFirstLetter.setTextColor(context.resources.getColor(R.color.colorPrimary))
             in 80..100 -> holder.mFirstLetter.setTextColor(context.resources.getColor(R.color.colorAccent))
         }
+        holder.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(p0: View?) {
+                return onClickCallback(section)
+            }
+        })
     }
 
     override fun getItemCount(): Int {
@@ -47,6 +52,10 @@ class UnitSectionsAdapter(private val context: Context, private val sections: Li
             mName = itemView.findViewById(R.id.txt_name) as TextView
             mDescription = itemView.findViewById(R.id.txt_desc) as TextView
             mFirstLetter = itemView.findViewById(R.id.txt_firstletter) as TextView
+        }
+
+        fun setOnClickListener(l: View.OnClickListener) {
+            itemView.setOnClickListener(l)
         }
     }
 }
