@@ -1,8 +1,8 @@
 package com.exlskills.android
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.CollapsingToolbarLayout
@@ -24,11 +24,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import com.exlskills.android.remote.CourseMetaAndUnits
 import com.exlskills.android.remote.Graph
 import com.exlskills.android.remote.GraphCallback
+import com.google.gson.GsonBuilder
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_course.*
 
@@ -186,15 +186,20 @@ class CourseActivity : AppCompatActivity() {
             val c = activity!!.course!!
 
             for (unit in c.units) {
-                val uHeading = TextView(activity!!)
+                val uHeading = TextView(context)
                 uHeading.text = unit.title
                 linLayout.addView(uHeading)
-                val sectionsRecycler = RecyclerView(activity!!)
+                val sectionsRecycler = RecyclerView(context)
                 val linearLayoutManager = LinearLayoutManager(getActivity().baseContext)
                 sectionsRecycler.layoutManager = linearLayoutManager
                 sectionsRecycler.setHasFixedSize(true)
 
                 val adapter = UnitSectionsAdapter(context, unit.sections_list) { section ->
+                    val intent = Intent(context, CourseCardActivity::class.java)
+                    intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_COURSE, GsonBuilder().create().toJson(c))
+                    intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_UNIT_ID, unit.id)
+                    intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_SECTION_ID, section.id)
+                    startActivity(intent)
                     println("Section clicked: " + section.toString())
                 }
                 sectionsRecycler.adapter = adapter
