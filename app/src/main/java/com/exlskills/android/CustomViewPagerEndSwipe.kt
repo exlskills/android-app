@@ -10,6 +10,7 @@ class CustomViewPagerEndSwipe(context: Context, attrs: AttributeSet) : ViewPager
 
     private var mStartDragX: Float = 0.toFloat()
     private var mListener: OnSwipeOutListener? = null
+    private val swipeThreshold: Float = 30F
 
     fun setOnSwipeOutListener(listener: OnSwipeOutListener) {
         mListener = listener
@@ -19,10 +20,14 @@ class CustomViewPagerEndSwipe(context: Context, attrs: AttributeSet) : ViewPager
         val x = ev.x
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> mStartDragX = x
-            MotionEvent.ACTION_MOVE -> if (mListener != null && mStartDragX < x && currentItem == 0) {
+            MotionEvent.ACTION_MOVE -> if (mListener != null && mStartDragX + swipeThreshold < x && currentItem == 0) {
+                println("LT start: $mStartDragX cur: $x")
                 mListener!!.onSwipeOutAtStart()
-            } else if (mListener != null && mStartDragX > x && currentItem == adapter.count - 1) {
+            } else if (mListener != null && mStartDragX > x + swipeThreshold && currentItem == adapter.count - 1) {
+                println("GT start: $mStartDragX cur: $x")
                 mListener!!.onSwipeOutAtEnd()
+            } else {
+                println("EL start: $mStartDragX cur: $x")
             }
         }
         return super.onInterceptTouchEvent(ev)

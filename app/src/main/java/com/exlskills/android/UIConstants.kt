@@ -12,5 +12,6 @@ class UIConstants {
         const val COURSE_CARD_INTENT_KEY_COURSE = "course"
         const val COURSE_CARD_INTENT_KEY_UNIT_ID = "unit.id"
         const val COURSE_CARD_INTENT_KEY_SECTION_ID = "section.id"
+        const val COURSE_CARD_INTENT_KEY_CARD_ID = "card.id"
     }
 }

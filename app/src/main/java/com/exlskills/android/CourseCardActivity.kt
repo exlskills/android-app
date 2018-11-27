@@ -1,10 +1,12 @@
 package com.exlskills.android
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.NavUtils
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -14,13 +16,13 @@ import android.webkit.WebView
 import com.exlskills.android.ids.URLIds.Companion.toUrlId
 import com.exlskills.android.remote.*
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_course_card.*
 import java.util.ArrayList
 import kotlin.math.roundToInt
 
 class CourseCardActivity : AppCompatActivity() {
     private val gqlApi = Graph()
-    private var pagerPosition: Int = 0
     private lateinit var course: CourseMetaAndUnits
     private lateinit var curUnit: CourseUnit
     private lateinit var curSection: UnitSection
@@ -49,8 +51,11 @@ class CourseCardActivity : AppCompatActivity() {
         curUnit = course.units.find { u -> u.id == intent.getStringExtra(UIConstants.COURSE_CARD_INTENT_KEY_UNIT_ID) }!!
         curSection = curUnit.sections_list.find { s -> s.id == intent.getStringExtra(UIConstants.COURSE_CARD_INTENT_KEY_SECTION_ID) }!!
 
-        setInitialCard()
-        println("Next nav: " + getNavigationParams().toString())
+        if (intent.getStringExtra(UIConstants.COURSE_CARD_INTENT_KEY_CARD_ID) != null) {
+            curCardMeta = curSection.cards_list.find { c -> c.id == intent.getStringExtra(UIConstants.COURSE_CARD_INTENT_KEY_CARD_ID) }!!
+        } else {
+            setInitialCard()
+        }
 
         setupViewPager(courseCardsPager)
         tabDots.setupWithViewPager(courseCardsPager, true)
@@ -58,23 +63,29 @@ class CourseCardActivity : AppCompatActivity() {
         setSupportActionBar(htab_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = curSection.title
+
+        val curCardIdx = curSection.cards_list.indexOfFirst { c -> c.id == curCardMeta.id }
+        if (curCardIdx != 0) {
+            courseCardsPager.setCurrentItem(curCardIdx, true)
+        }
     }
 
-    fun setInitialCard() {
+    private fun setInitialCard() {
         var setCard = false
         for (c in curSection.cards_list) {
             if (c.ema.roundToInt() != 100) {
                 curCardMeta = c
                 setCard = true
+                break
             }
         }
-        if (setCard) {
+        if (!setCard) {
             // If we haven't set anything yet, then just go the last one in the series
             curCardMeta = curSection.cards_list[curSection.cards_list.size-1]
         }
     }
 
-    fun getNavigationParams(): CardNavigationParams {
+    private fun getNavigationParams(): CardNavigationParams {
         var nav = CardNavigationParams()
         val curUnitIdx = course.units.indexOfFirst { u -> u.id == curUnit.id }
         val curSectIdx = curUnit.sections_list.indexOfFirst { s -> s.id == curSection.id }
@@ -110,14 +121,14 @@ class CourseCardActivity : AppCompatActivity() {
         } else {
             if (curSectIdx-1 > -1) {
                 // Use the last card of the prev section and set prev section
-                nav.prevSection = curUnit.sections_list[curSectIdx-1];
-                nav.prevCard = nav.prevSection!!.cards_list[nav.prevSection!!.cards_list.size-1];
+                nav.prevSection = curUnit.sections_list[curSectIdx-1]
+                nav.prevCard = nav.prevSection!!.cards_list[nav.prevSection!!.cards_list.size-1]
             } else {
                 if (curUnitIdx-1 > -1) {
                     // Use the last card of the last section of the prev unit
-                    nav.prevUnit = course.units[curUnitIdx-1];
-                    nav.prevSection = nav.prevUnit!!.sections_list[nav.prevUnit!!.sections_list.size-1];
-                    nav.prevCard = nav.prevSection!!.cards_list[nav.prevSection!!.cards_list.size-1];
+                    nav.prevUnit = course.units[curUnitIdx-1]
+                    nav.prevSection = nav.prevUnit!!.sections_list[nav.prevUnit!!.sections_list.size-1]
+                    nav.prevCard = nav.prevSection!!.cards_list[nav.prevSection!!.cards_list.size-1]
                 } else {
                     // FIRST CARD OF COURSE
                     nav.prevUnit = null
@@ -171,7 +182,7 @@ class CourseCardActivity : AppCompatActivity() {
 
         viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
-                pagerPosition = position
+                curCardMeta = curSection.cards_list[position]
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) { }
@@ -181,13 +192,35 @@ class CourseCardActivity : AppCompatActivity() {
     }
 
     fun navigateNext() {
-        // TODO
-        println("NAVIGATE NEXT")
+        val nextNav = getNavigationParams()
+        if (nextNav.nextCard == null || nextNav.nextSection == null || nextNav.nextUnit == null) {
+            // This will take us back out to the course page if there is a back history
+            NavUtils.navigateUpFromSameTask(this)
+        } else {
+            val intent = Intent(this, CourseCardActivity::class.java)
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_COURSE, GsonBuilder().create().toJson(course))
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_UNIT_ID, nextNav.nextUnit!!.id)
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_SECTION_ID, nextNav.nextSection!!.id)
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_CARD_ID, nextNav.nextCard!!.id)
+            startActivity(intent)
+        }
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
     }
 
     fun navigatePrev() {
-        // TODO
-        println("NAVIGATE PREV")
+        val prevNav = getNavigationParams()
+        if (prevNav.prevCard == null || prevNav.prevSection == null || prevNav.prevUnit == null) {
+            // This will take us back out to the course page if there is a back history
+            NavUtils.navigateUpFromSameTask(this)
+        } else {
+            val intent = Intent(this, CourseCardActivity::class.java)
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_COURSE, GsonBuilder().create().toJson(course))
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_UNIT_ID, prevNav.prevUnit!!.id)
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_SECTION_ID, prevNav.prevSection!!.id)
+            intent.putExtra(UIConstants.COURSE_CARD_INTENT_KEY_CARD_ID, prevNav.prevCard!!.id)
+            startActivity(intent)
+        }
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
     }
 
     private class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
