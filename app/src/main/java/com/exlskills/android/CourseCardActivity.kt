@@ -77,7 +77,7 @@ class CourseCardActivity : AppCompatActivity() {
             val wv = view.findViewById<WebView>(R.id.courseCardWebView)
             wv.settings.domStorageEnabled = true
             wv.settings.javaScriptEnabled = true
-            wv.loadUrl("$cardWebViewBaseUrl/learn-en/courses/${toUrlId(activity!!.course.meta.title, activity!!.course.meta.id)}/${toUrlId(activity!!.curUnit.title, activity!!.curUnit.id)}/${toUrlId(activity!!.curSection.title, activity!!.curSection.id)}/${toUrlId(activity!!.curCardMeta.title, activity!!.git statuacurCardMeta.id)}")
+            wv.loadUrl("$cardWebViewBaseUrl/learn-en/courses/${toUrlId(activity!!.course.meta.title, activity!!.course.meta.id)}/${toUrlId(activity!!.curUnit.title, activity!!.curUnit.id)}/${toUrlId(activity!!.curSection.title, activity!!.curSection.id)}/${toUrlId(activity!!.curCardMeta.title, activity!!.curCardMeta.id)}")
             return view
         }
     }
