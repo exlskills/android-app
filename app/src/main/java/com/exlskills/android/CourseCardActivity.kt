@@ -3,7 +3,6 @@ package com.exlskills.android
 import android.annotation.SuppressLint
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
@@ -21,6 +20,7 @@ import kotlin.math.roundToInt
 
 class CourseCardActivity : AppCompatActivity() {
     private val gqlApi = Graph()
+    private var pagerPosition: Int = 0
     private lateinit var course: CourseMetaAndUnits
     private lateinit var curUnit: CourseUnit
     private lateinit var curSection: UnitSection
@@ -50,6 +50,7 @@ class CourseCardActivity : AppCompatActivity() {
         curSection = curUnit.sections_list.find { s -> s.id == intent.getStringExtra(UIConstants.COURSE_CARD_INTENT_KEY_SECTION_ID) }!!
 
         setInitialCard()
+        println("Next nav: " + getNavigationParams().toString())
 
         setupViewPager(courseCardsPager)
         tabDots.setupWithViewPager(courseCardsPager, true)
@@ -73,14 +74,12 @@ class CourseCardActivity : AppCompatActivity() {
         }
     }
 
-    // TODO test this function to get the navigation details
-    fun getNextPosition(): CardNavigationParams {
+    fun getNavigationParams(): CardNavigationParams {
         var nav = CardNavigationParams()
-        val curUnitIdx = course.units.indexOf(curUnit)
-        val curSectIdx = curUnit.sections_list.indexOf(curSection)
-        val curCardIdx = curSection.cards_list.indexOf(curCardMeta)
+        val curUnitIdx = course.units.indexOfFirst { u -> u.id == curUnit.id }
+        val curSectIdx = curUnit.sections_list.indexOfFirst { s -> s.id == curSection.id }
+        val curCardIdx = curSection.cards_list.indexOfFirst { c -> c.id == curCardMeta.id }
         // Setup the card navigation
-        // TODO
         nav.nextUnit = curUnit
         nav.prevUnit = curUnit
         nav.nextSection = curSection
@@ -132,10 +131,12 @@ class CourseCardActivity : AppCompatActivity() {
 
     class CardFragment : Fragment {
         private var activity: CourseCardActivity? = null
+        private var cardMeta: SectionCardLiteMeta? = null
 
         @SuppressLint("ValidFragment")
-        constructor(a: CourseCardActivity, cardMeta: SectionCardLiteMeta) {
+        constructor(a: CourseCardActivity, cm: SectionCardLiteMeta) {
             activity = a
+            cardMeta = cm
         }
 
         constructor()
@@ -145,12 +146,12 @@ class CourseCardActivity : AppCompatActivity() {
             val wv = view.findViewById<WebView>(R.id.courseCardWebView)
             wv.settings.domStorageEnabled = true
             wv.settings.javaScriptEnabled = true
-            wv.loadUrl("$cardWebViewBaseUrl/learn-en/courses/${toUrlId(activity!!.course.meta.title, activity!!.course.meta.id)}/${toUrlId(activity!!.curUnit.title, activity!!.curUnit.id)}/${toUrlId(activity!!.curSection.title, activity!!.curSection.id)}/${toUrlId(activity!!.curCardMeta.title, activity!!.curCardMeta.id)}")
+            wv.loadUrl("$cardWebViewBaseUrl/learn-en/courses/${toUrlId(activity!!.course.meta.title, activity!!.course.meta.id)}/${toUrlId(activity!!.curUnit.title, activity!!.curUnit.id)}/${toUrlId(activity!!.curSection.title, activity!!.curSection.id)}/${toUrlId(cardMeta!!.title, cardMeta!!.id)}")
             return view
         }
     }
 
-    private fun setupViewPager(viewPager: ViewPager) {
+    private fun setupViewPager(viewPager: CustomViewPagerEndSwipe) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         for (card in curSection.cards_list) {
             adapter.addFrag(
@@ -158,6 +159,35 @@ class CourseCardActivity : AppCompatActivity() {
             )
         }
         viewPager.adapter = adapter
+        viewPager.setOnSwipeOutListener(object: CustomViewPagerEndSwipe.OnSwipeOutListener {
+            override fun onSwipeOutAtEnd() {
+                navigateNext()
+            }
+
+            override fun onSwipeOutAtStart() {
+                navigatePrev()
+            }
+        })
+
+        viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+            override fun onPageSelected(position: Int) {
+                pagerPosition = position
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) { }
+
+            override fun onPageScrollStateChanged(state: Int) { }
+        })
+    }
+
+    fun navigateNext() {
+        // TODO
+        println("NAVIGATE NEXT")
+    }
+
+    fun navigatePrev() {
+        // TODO
+        println("NAVIGATE PREV")
     }
 
     private class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
