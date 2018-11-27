@@ -3,18 +3,21 @@ package com.exlskills.android
 import android.annotation.SuppressLint
 import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import com.exlskills.android.ids.URLIds.Companion.toUrlId
 import com.exlskills.android.remote.*
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_course_card.*
 import java.util.ArrayList
+import kotlin.math.roundToInt
 
 class CourseCardActivity : AppCompatActivity() {
     private val gqlApi = Graph()
@@ -22,6 +25,10 @@ class CourseCardActivity : AppCompatActivity() {
     private lateinit var curUnit: CourseUnit
     private lateinit var curSection: UnitSection
     private lateinit var curCardMeta: SectionCardLiteMeta
+
+    companion object {
+        val cardWebViewBaseUrl = "https://exlskills.com/mobile-v1"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +38,28 @@ class CourseCardActivity : AppCompatActivity() {
         curUnit = course.units.find { u -> u.id == intent.getStringExtra(UIConstants.COURSE_CARD_INTENT_KEY_UNIT_ID) }!!
         curSection = curUnit.sections_list.find { s -> s.id == intent.getStringExtra(UIConstants.COURSE_CARD_INTENT_KEY_SECTION_ID) }!!
 
+        setInitialCard()
+
         setupViewPager(courseCardsPager)
         tabDots.setupWithViewPager(courseCardsPager, true)
 
         setSupportActionBar(htab_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = curSection.title
+    }
+
+    fun setInitialCard() {
+        var setCard = false
+        for (c in curSection.cards_list) {
+            if (c.ema.roundToInt() != 100) {
+                curCardMeta = c
+                setCard = true
+            }
+        }
+        if (setCard) {
+            // If we haven't set anything yet, then just go the last one in the series
+            curCardMeta = curSection.cards_list[curSection.cards_list.size-1]
+        }
     }
 
     class CardFragment : Fragment {
@@ -49,11 +72,14 @@ class CourseCardActivity : AppCompatActivity() {
 
         constructor()
 
-        override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View = inflater.inflate(R.layout.course_card_fragment, container, false)
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+            val view = inflater.inflate(R.layout.course_card_fragment, container, false)
+            val wv = view.findViewById<WebView>(R.id.courseCardWebView)
+            wv.settings.domStorageEnabled = true
+            wv.settings.javaScriptEnabled = true
+            wv.loadUrl("$cardWebViewBaseUrl/learn-en/courses/${toUrlId(activity!!.course.meta.title, activity!!.course.meta.id)}/${toUrlId(activity!!.curUnit.title, activity!!.curUnit.id)}/${toUrlId(activity!!.curSection.title, activity!!.curSection.id)}/${toUrlId(activity!!.curCardMeta.title, activity!!.git statuacurCardMeta.id)}")
+            return view
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
@@ -88,10 +114,6 @@ class CourseCardActivity : AppCompatActivity() {
             return ""
             // return mFragmentTitleList.get(position)
         }
-    }
-
-    fun setNextCard() {
-        // TODO
     }
 
 }
